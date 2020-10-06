@@ -2,7 +2,7 @@ compiler
 g++ -o GA GA.cpp
 
 execution
-./Ga Bit Pop Iteration Run method(t-tourment or X-roulette)
+./GA Bit Pop Iteration Run method(t-tourment or X-roulette)
 
 ./GA 100 20 1000 20 t
 
