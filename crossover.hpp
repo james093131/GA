@@ -51,7 +51,7 @@ void crossover(c2d &arr,c2d temp,int pop,int len){//隨機生成一個切割點�
     int i=0;
     while(i<pop){
         int c1=rand()%len;
-        int c2=rand()%len;
+        // int c2=rand()%len;
         float t1 = (float) rand() / (RAND_MAX + 1.0);
         for(int k=0;k<len;k++)
         {
