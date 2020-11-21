@@ -4,6 +4,6 @@
 
 2. Type either one of the following two commands to run the program:
 
-  ./main [bit] [population] [iteration] [run ] [method] 
+  ./main [population] [iteration] [run] [method] 
 
   ./GA Bit Pop Iteration Run method(t-tourment or X-roulette)

@@ -25,26 +25,26 @@ typedef vector<d1d> d2d;
 typedef vector<d2d> d3d;
 typedef vector<d3d> d4d;
 
-void tournament(c2d arr,c2d &temp,i1d value,int pop,int len){
+void tournament(i2d arr,i2d &temp,d1d Fitness,int pop){
     int i=0;
     while(i<pop){
         int c1=rand()%(pop);
         int c2=rand()%(pop);
         int chc;
-        if(value[c1]>value[c2]){
+        if(Fitness[c1]<Fitness[c2]){
             chc=c1;
         }
         else{
             chc=c2;
         }
-        for(int k=0;k<len;k++)
+        for(int k=0;k<arr[chc].size();k++)
         {
         temp[i][k]=arr[chc][k];
         }
         i++;
     }
 }
-void mutation(c2d &arr,int ind,int len)//隨機選取一點做調換
+void mutation(i2d &arr,int ind,int len)//隨機選取一點做調換
 {
     int c=rand()%len;
     if( arr[ind][c] == '1')
@@ -53,7 +53,7 @@ void mutation(c2d &arr,int ind,int len)//隨機選取一點做調換
         arr[ind][c]='1';
     
 }
-void crossover(c2d &arr,c2d temp,int pop,int len){//隨機生成一個切割點，將兩個染色體做交配
+void cycle_crossover(i2d &arr,i2d temp,int pop,int len){//隨機生成一個切割點，將兩個染色體做交配
     int i=0;
     while(i<pop){
         int c1=rand()%len;

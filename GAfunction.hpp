@@ -69,38 +69,52 @@ void printtwodim(c2d arr,int pop,int len)
         cout<<endl<<endl;
     }
 }
-void create(c2d &arr,int pop,int len)//隨機產生TSP
+void create(i2d city,i2d &arr,int pop)//隨機產生TSP
 {
+    arr.assign(pop,i1d(city.size()+1,0));
     for(int i=0;i<pop;i++)
     {
-        for(int j=0;j<len;j++)
-        {           
-            int a=rand()%2;
-            char c =a+'0';
-            arr[i][j]=c;
-            //cout<<arr[i][j]<<' ';
+        i1d choose_table;
+        for(int i=0;i<city.size();i++)
+        {
+        choose_table.push_back(city[i][0]);
         }
-        //cout<<endl<<endl;
+        for(int j=0;j<city.size()+1;j++)
+        {      
+            if( j == city.size())
+            {
+                arr[i][j] = arr[i][0];
+            }
+            else{
+                int index = rand()%choose_table.size();
+                int a = choose_table[index];
+                choose_table.erase(choose_table.begin()+index);
+                arr[i][j] = a;
+            }
+            // cout<<arr[i][j]<<' ';            
+        }
+    
+        // cout<<endl<<endl;
     }
 }
-void evaluate(c2d arr,int pop,int len,i1d &value,int &bestpop,int &bestvalue)//評估所有染色體的適應度（也就是1有幾個)
+void evaluate(i2d arr,d2d distance_table,d1d &Fitness,int &bestpop,int &bestvalue)//評估所有染色體的適應度（也就是1有幾個)
 {
-    bestvalue=0;
-    for(int i=0;i<pop;i++)
+    bestvalue=1000000;
+    for(int i=0;i<arr.size();i++)
     {
-        int temp=0;
-        for(int j=0;j<len;j++)
+        double temp=0;
+        for(int j=0;j<arr[i].size()-1;j++)
         {
-           if(arr[i][j] == '1')
-           {
-            temp++;
-           }
+           int Start = arr[i][j];
+           int End = arr[i][j+1];
+           temp += distance_table[Start-1][End-1];
         }
-        value[i]=temp;
-        if(value[i]>bestvalue)
+        // cout<<temp;
+        Fitness[i]=temp;
+        if(Fitness[i] < bestvalue)
             {
                 bestpop=i;
-                bestvalue=value[i];
+                bestvalue = Fitness[i];
             }
     }
 
@@ -154,24 +168,37 @@ void ini(i2d &city,d2d &distancetable)
     makearr(city, a, len);
     distancecal(distancetable, city, len); //製作距離表
 }
-void GA(int iteration,c2d P,i1d value,int pop,int len,c1d globalbest,int &globalbestvalue,int bestvalue,int bestpop,int r,i1d &result,char *function)
+void GA(int iteration,i2d P,i1d value,int pop,i1d globalbest,int &globalbestvalue,int bestvalue,int bestpop,int r,i1d &result,char *function)
 {
     int i=1;
-    i1d bestrunpath(len+1);
+    i1d bestrunpath;
     i2d city;
     d2d distancetable;
-    ini(city,distancetable);
-    for(int i=0;i<distancetable.size();i++)
+    d1d Fitness(pop);
+    i2d temp;
+    ini(city,distancetable);//做距離表和建立城市座標表
+    bestrunpath.resize(city.size()+1);
+    create(city,P,pop);
+    temp.assign(P.size(),i1d(P[0].size(),0));
+    evaluate(P,distancetable,Fitness,bestpop,bestvalue);//初始化完成
+    for(int i=0;i<P.size();i++)
     {
-        for(int j=0;j<distancetable[i].size();j++)
-        {           
-            cout<<distancetable[i][j]<<' ';
+        for(int j=0;j<P[i].size();j++)
+        {
+            cout<<P[i][j]<<' ';
+        }
+        cout<<"F"<<Fitness[i];
+        cout<<endl<<endl;
+    }
+    tournament(P,temp,Fitness,pop);
+    for(int i=0;i<temp.size();i++)
+    {
+        for(int j=0;j<temp[i].size();j++)
+        {
+            cout<<temp[i][j]<<' ';
         }
         cout<<endl<<endl;
     }
-
-
-
     // while(i<iteration)
     // {
     //     c2d temp;
@@ -193,11 +220,11 @@ void GA(int iteration,c2d P,i1d value,int pop,int len,c1d globalbest,int &global
     // }
     // result[r]=globalbestvalue;
 }
-void RUN(int iteration,c2d P,i1d value,int pop,int len,c1d globalbest,int &globalbestvalue,int bestvalue,int bestpop,int run,i1d &result,char *function)
+void RUN(int iteration,i2d P,i1d value,int pop,i1d globalbest,int &globalbestvalue,int bestvalue,int bestpop,int run,i1d &result,char *function)
 {
      int r=0;
     while(r<run){
-        GA(iteration,P,value,pop,len,globalbest,globalbestvalue,bestvalue,bestpop,r,result,function);
+        GA(iteration,P,value,pop,globalbest,globalbestvalue,bestvalue,bestpop,r,result,function);
         r++;
     }
  
