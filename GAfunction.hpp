@@ -119,14 +119,15 @@ void evaluate(i2d arr,d2d distance_table,d1d &Fitness,int &bestpop,int &bestvalu
     }
 
 }
-void updateglobalbest(int bestvalue,int bestpop,int &globalbestvalue,c1d globalbest,c2d arr,int len)//更新最佳解
+void updateglobalbest(double bestvalue,int bestpop,double &globalbestvalue,i1d &globalbest,i2d arr)//更新最佳解
 {
-     if(bestvalue>globalbestvalue)
+     if(bestvalue < globalbestvalue)
         {
+            globalbest.clear();
             globalbestvalue=bestvalue;
-            for(int i=0;i<len;i++)
+            for(int i=0;i<arr[bestpop].size();i++)
             {
-                globalbest[i]=  arr[bestpop][i];
+                globalbest.push_back( arr[bestpop][i]);
             }
         }
 }
@@ -168,10 +169,14 @@ void ini(i2d &city,d2d &distancetable)
     makearr(city, a, len);
     distancecal(distancetable, city, len); //製作距離表
 }
-void GA(int iteration,i2d P,i1d value,int pop,i1d globalbest,int &globalbestvalue,int bestvalue,int bestpop,int r,i1d &result,char *function)
+void GA(int iteration,i2d P,i1d value,int pop,int r,i1d &convergence,i1d &result)
 {
-    int i=1;
+    int i=0;
+    int bestpop=0;//儲存最佳的解的位置
+    int bestvalue=100000;//儲存最佳的解距離多少（越少越好所以這邊設大數）
+    double globalbestvalue = 100000;
     i1d bestrunpath;
+    i1d globalbest;
     i2d city;
     d2d distancetable;
     d1d Fitness(pop);
@@ -181,20 +186,13 @@ void GA(int iteration,i2d P,i1d value,int pop,i1d globalbest,int &globalbestvalu
     create(city,P,pop);
     temp.assign(P.size(),i1d(P[0].size(),0));
     evaluate(P,distancetable,Fitness,bestpop,bestvalue);//初始化完成
-    for(int i=0;i<P.size();i++)
-    {
-        for(int j=0;j<P[i].size();j++)
-        {
-            cout<<P[i][j]<<' ';
-        }
-        cout<<"F"<<Fitness[i];
-        cout<<endl<<endl;
-    }
-     while(i<iteration)
+    while(i<iteration)
     {
         tournament(P,temp,Fitness,pop);
         CX_crossover(P,temp);
         evaluate(P,distancetable,Fitness,bestpop,bestvalue);        
+        updateglobalbest(bestvalue,bestpop,globalbestvalue,globalbest,P);
+        convergence[i] += globalbestvalue;
         i++;
     }
     for(int i=0;i<P.size();i++)
@@ -206,34 +204,28 @@ void GA(int iteration,i2d P,i1d value,int pop,i1d globalbest,int &globalbestvalu
             cout<<"F"<<Fitness[i];
             cout<<endl<<endl;
         }
-    // while(i<iteration)
-    // {
-    //     c2d temp;
-    //     temp.assign(pop,c1d(len,0));
-    //     if(function == std::string("t"))
-    //         tournament(P,temp,value,pop,len);
-    //     else
-    //     {
-    //      roulettechoose(P,temp,value,pop,len);
-    //     }
-        
-    //     crossover(P,temp,pop,len);
-    //     evaluate(P,pop,len,value,bestpop,bestvalue);
-    //     // printonedim(value,pop);
-    //     updateglobalbest(bestvalue,bestpop,globalbestvalue,globalbest,P,len);
-    //     i++;
-    //     if(globalbestvalue==len)
-    //         break;
-    // }
-    // result[r]=globalbestvalue;
+    for(int i=0;i<globalbest.size();i++)
+    {
+        cout<<globalbest[i]<<' ';
+    }
+    cout<<endl<<globalbestvalue<<endl;
 }
-void RUN(int iteration,i2d P,i1d value,int pop,i1d globalbest,int &globalbestvalue,int bestvalue,int bestpop,int run,i1d &result,char *function)
+void RUN(int iteration,int pop,int run)
 {
-     int r=0;
+    int r=0;
+    i2d P;
+    i1d value(pop,0);//儲存目前最佳的染色體
+    i1d convergence(iteration,0);
+    i1d result(run,0);
     while(r<run){
-        GA(iteration,P,value,pop,globalbest,globalbestvalue,bestvalue,bestpop,r,result,function);
+        GA(iteration,P,value,pop,r,convergence,result);
         r++;
     }
- 
+    for(int i=0;i<convergence.size();i++)
+    {
+        convergence[i] = convergence[i]/run;
+        cout<<convergence[i]<<' ';
+    }
+    cout<<endl;
     
 }

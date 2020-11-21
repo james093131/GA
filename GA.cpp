@@ -5,19 +5,10 @@ int main(int argc, char *argv[])
     srand(time(NULL));
     int pop = atoi(argv[1]);
 	int iteration = atoi(argv[2]);
-    int run = atoi(argv[3]);
-    char * functionchoice=argv[4];
-    i2d P;
-    i1d value(pop,0);//儲存目前最佳的染色體
-    i1d globalbest;
-    int globalbestvalue=0;;
-    int bestpop=0;//儲存最佳的解的位置
-    int bestvalue=100000;//儲存最佳的解距離多少（越少越好所以這邊設大數）
-    //printonedim(value,pop);
-    i1d result(run,0);
+    int run = atoi(argv[3]);    
 
     // START=clock();
-    RUN(iteration,P,value,pop,globalbest,globalbestvalue,bestvalue,bestpop,run,result,functionchoice);
+    RUN(iteration,pop,run);
     // // END=clock();
     // // int avg_bestvalue=avg(result,run);
     // // finaloutput(len,pop,avg_bestvalue,run,START,END,functionchoice);

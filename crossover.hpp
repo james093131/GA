@@ -1,5 +1,5 @@
 #define CR 0.95
-#define MR 0.2
+#define MR 0.1
 #define dim 3//幾維
 #include<stdio.h>
 #include<fstream>
