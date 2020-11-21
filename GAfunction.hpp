@@ -5,12 +5,13 @@ int* read(int &sum){//讀檔
     fstream file;
     int ind=0;
     file.open("readfile.txt",ios::in);
-    int* temp=new int[510];
+    int* temp=new int[1024];
     while(file)
     {
         file>>temp[ind];
         ind++;
     }
+    file.close();
     sum=ind-1;
     return temp;
 }
