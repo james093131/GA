@@ -1,5 +1,5 @@
 #define CR 0.95
-#define MR 0.1
+#define MR 0.2
 #define dim 3//幾維
 #include<stdio.h>
 #include<fstream>
@@ -31,64 +31,96 @@ void tournament(i2d arr,i2d &temp,d1d Fitness,int pop){
         int c1=rand()%(pop);
         int c2=rand()%(pop);
         int chc;
-        if(Fitness[c1]<Fitness[c2]){
-            chc=c1;
+        if(Fitness[c1] < Fitness[c2]){
+            chc = c1;
         }
         else{
-            chc=c2;
+            chc = c2;
         }
         for(int k=0;k<arr[chc].size();k++)
         {
-        temp[i][k]=arr[chc][k];
+            temp[i][k] = arr[chc][k];
         }
         i++;
     }
 }
-void mutation(i2d &arr,int ind,int len)//隨機選取一點做調換
+void mutation(i1d &arr)//隨機選取一點做調換
 {
-    int c=rand()%len;
-    if( arr[ind][c] == '1')
-        arr[ind][c]='0';
-    else
-        arr[ind][c]='1';
+    int len = arr.size();
+    int c1 = rand()%(len-2)+1;
+    int c2 = rand()%(len-2)+1;
+    int temp;
+    temp = arr[c1];
+    arr[c1] = arr[c2];
+    arr[c2] = temp;
     
 }
-void cycle_crossover(i2d &arr,i2d temp,int pop,int len){//隨機生成一個切割點，將兩個染色體做交配
+int Find_Value(int F,i1d arr)//回傳該值的index
+{
+    for(int i=0;i<arr.size();i++)
+    {
+        if(arr[i] == F)
+            return i;
+    }
+    return -1;
+}
+void CX_crossover(i2d &arr,i2d temp){//隨機生成一個切割點，將兩個染色體做交配
+
+
+    int len = temp[0].size();
+    
     int i=0;
-    while(i<pop){
-        int c1=rand()%len;
-        // int c2=rand()%len;
-        float t1 = (float) rand() / (RAND_MAX + 1.0);
-        for(int k=0;k<len;k++)
-        {
-            if(t1<CR){
-                if(k>c1)
-                {
-                    arr [i][k]=temp[i+1][k];
-                    arr [i+1][k]=temp[i][k];
-                }
-                else{
-                    arr [i][k]=temp[i][k];
-                    arr [i+1][k]=temp[i+1][k];
-                }
+    while(i<temp.size())
+    {
+        i1d FIRST_check(arr[0].size());
+        i1d Second_check(arr[0].size());
+        int index = Find_Value(temp[i][0],temp[i+1]);
+        FIRST_check[0] = 1;
+        Second_check[index] = 1;
+        int chc =i;
+        while(true){
+            if(chc == i)
+            {
+            index = Find_Value(temp[i+1][index],temp[i]);
+            if(FIRST_check[index] == 1)
+                break;
+            else
+                FIRST_check[index] = 1;
+            chc =i+1;
             }
             else{
-                arr[i][k]=temp[i][k];
-                arr[i+1][k]=temp[i+1][k];
+                index = Find_Value(temp[i][index],temp[i+1]);
+                if(Second_check[index] == 1)
+                    break;
+                else 
+                    Second_check[index] = 1;
+                chc =i;
             }
         }
+        for(int j=0;j<len-1;j++)
+        {
+            if(FIRST_check[j]==1)
+            {
+                arr[i][j] = temp[i][j];
+                arr[i+1][j] = temp[i+1][j];
+            }
+            else{
+                arr[i][j] = temp[i+1][j];
+                arr[i+1][j] = temp[i][j];
+            }
+        }
+        arr[i][len-1] = arr[i][0];
+        arr[i+1][len-1] = arr[i+1][0];
         float x = (float) rand() / (RAND_MAX + 1.0);
         float y = (float) rand() / (RAND_MAX + 1.0);
-        if(x<MR)
-        {
-        mutation(arr,i,len);
-        }
-        if(y<MR)
-        {
-        mutation(arr,i+1,len); 
-        }
-        i+=2;
+        if(x < MR)
+            mutation(arr[i]);
+        if(y < MR)
+            mutation(arr[i+1]);
+        i += 2;
     }
+    
+        
 }
 void sum(i1d arr,int len,int &s)
 {

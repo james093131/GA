@@ -190,15 +190,22 @@ void GA(int iteration,i2d P,i1d value,int pop,i1d globalbest,int &globalbestvalu
         cout<<"F"<<Fitness[i];
         cout<<endl<<endl;
     }
-    tournament(P,temp,Fitness,pop);
-    for(int i=0;i<temp.size();i++)
+     while(i<iteration)
     {
-        for(int j=0;j<temp[i].size();j++)
-        {
-            cout<<temp[i][j]<<' ';
-        }
-        cout<<endl<<endl;
+        tournament(P,temp,Fitness,pop);
+        CX_crossover(P,temp);
+        evaluate(P,distancetable,Fitness,bestpop,bestvalue);        
+        i++;
     }
+    for(int i=0;i<P.size();i++)
+        {
+            for(int j=0;j<P[i].size();j++)
+            {
+                cout<<P[i][j]<<' ';
+            }
+            cout<<"F"<<Fitness[i];
+            cout<<endl<<endl;
+        }
     // while(i<iteration)
     // {
     //     c2d temp;
