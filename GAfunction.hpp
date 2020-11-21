@@ -142,16 +142,17 @@ int avg(i1d arr,int len)
 	int avg=sum/len;
 	return avg;
 }
-void finaloutput(int len,int pop,int avgbestvalue,int run,double START,double END,char * function)
+void finaloutput(int pop,int avgbestvalue,int run,double START,double END,i1d PATH)
 {   
-    cout<<"length : "<<len<<endl;
     cout<<"Population : "<<pop<<endl;
     cout<<"Run :"<<run<<endl;
     cout<<"Average Optimum : "<<avgbestvalue<<endl;
-    if(function == std::string("t"))
-        cout<<"Select Function : Tournament"<<endl;
-    else
-        cout<<"Select Function : Roulettechoose"<<endl;
+    cout<<"Best Path : "<<endl;
+    for(int i=0;i<PATH.size();i++)
+    {
+        cout<<PATH[i]<<' ';
+    }
+    cout<<endl;
     cout<<"Execution Time :"<<(END - START) / CLOCKS_PER_SEC<<"(s)"<<endl;
 }
 
@@ -163,13 +164,12 @@ void ini(i2d &city,d2d &distancetable)
 
     int len = templen / dim;
     d1d iteration_optimum(1001);
-    int bestrunresult = 100000;
     city.assign(len, i1d(dim, 0));
     distancetable.assign(len,d1d(len,0));//儲存距離表
     makearr(city, a, len);
     distancecal(distancetable, city, len); //製作距離表
 }
-void GA(int iteration,i2d P,i1d value,int pop,int r,i1d &convergence,i1d &result)
+void GA(int iteration,i2d P,i1d value,int pop,int r,i1d &convergence,i1d &result,i1d &PATH)
 {
     int i=0;
     int bestpop=0;//儲存最佳的解的位置
@@ -204,28 +204,42 @@ void GA(int iteration,i2d P,i1d value,int pop,int r,i1d &convergence,i1d &result
             cout<<"F"<<Fitness[i];
             cout<<endl<<endl;
         }
-    for(int i=0;i<globalbest.size();i++)
-    {
-        cout<<globalbest[i]<<' ';
-    }
-    cout<<endl<<globalbestvalue<<endl;
+    PATH.assign(globalbest.begin(),globalbest.end());
 }
 void RUN(int iteration,int pop,int run)
 {
+    double START,END;
     int r=0;
     i2d P;
     i1d value(pop,0);//儲存目前最佳的染色體
+    i1d PATH;
     i1d convergence(iteration,0);
     i1d result(run,0);
+    START=clock();
+
     while(r<run){
-        GA(iteration,P,value,pop,r,convergence,result);
+        GA(iteration,P,value,pop,r,convergence,result,PATH);
         r++;
     }
     for(int i=0;i<convergence.size();i++)
     {
         convergence[i] = convergence[i]/run;
-        cout<<convergence[i]<<' ';
     }
     cout<<endl;
+    END=clock();
+    finaloutput(pop,convergence[convergence.size()-1],run,START,END,PATH);
+    fstream file;//寫檔
+	file.open("GA_PATH.txt",ios::app);
+    for(int i=0;i<PATH.size();i++)
+    {
+        file<<PATH[i]<<' ';
+    }
+    file.close();
+    fstream file1;//寫檔
+    file1.open("GA_Convergence.txt",ios::app);
+    for(int i=0;i<convergence.size();i++)
+    {
+        file1<<i<<' '<<convergence[i]<<' ';
+    }
     
 }
