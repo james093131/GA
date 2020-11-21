@@ -18,15 +18,16 @@ int main(int argc, char *argv[])
     int bestvalue=0;//儲存最佳的解多少bit
     //printonedim(value,pop);
     i1d result(run,0);
-    START=clock();
+    
+    // START=clock();
     RUN(iteration,P,value,pop,len,globalbest,globalbestvalue,bestvalue,bestpop,run,result,functionchoice);
-    END=clock();
-    int avg_bestvalue=avg(result,run);
-    finaloutput(len,pop,avg_bestvalue,run,START,END,functionchoice);
-    fstream file;//寫檔
-    if(functionchoice == std::string("t"))
-	    file.open("GA_Tournament.txt",ios::app);
-    else
-        file.open("GA_Roulettechoose.txt",ios::app);
-	file<<iteration<<' '<<avg_bestvalue<<endl;
+    // // END=clock();
+    // // int avg_bestvalue=avg(result,run);
+    // // finaloutput(len,pop,avg_bestvalue,run,START,END,functionchoice);
+    // // fstream file;//寫檔
+    // // if(functionchoice == std::string("t"))
+	// //     file.open("GA_Tournament.txt",ios::app);
+    // // else
+    // //     file.open("GA_Roulettechoose.txt",ios::app);
+	// // file<<iteration<<' '<<avg_bestvalue<<endl;
 }
