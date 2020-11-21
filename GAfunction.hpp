@@ -229,17 +229,17 @@ void RUN(int iteration,int pop,int run)
     END=clock();
     finaloutput(pop,convergence[convergence.size()-1],run,START,END,PATH);
     fstream file;//寫檔
-	file.open("GA_PATH.txt",ios::app);
+	file.open("GA_PATH.txt",ios::out);
     for(int i=0;i<PATH.size();i++)
     {
-        file<<PATH[i]<<' ';
+        file<<PATH[i]<<endl;
     }
     file.close();
     fstream file1;//寫檔
-    file1.open("GA_Convergence.txt",ios::app);
+    file1.open("GA_Convergence.txt",ios::out);
     for(int i=0;i<convergence.size();i++)
     {
-        file1<<i<<' '<<convergence[i]<<' ';
+        file1<<i<<' '<<convergence[i]<<endl;
     }
     
 }

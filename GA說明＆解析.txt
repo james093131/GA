@@ -1,22 +1,12 @@
-compiler
-g++ -o GA GA.cpp
-
-execution
-./GA Bit Pop Iteration Run method(t-tourment or X-roulette)
-
-./GA 100 20 1000 20 t
-
 本次ＧＡ實作使用
 選擇方法 :土耳曼
 染色體數量 :20（可自訂）
+Crossover method : C_X
 Crossover Rate :0.95(可自訂）
-Mutation Rate :0.1(可自訂）
+Mutation Rate :0.2(可自訂）
 
 
-圖爾曼的選擇法，基本上在Iteration數量足夠的情形下能找到最佳解
-輪盤則會收斂在局部最佳解（大約為65)，即使Iteration數量增加，也不會產生更好的解
-詳見GAcompare.png以及選擇方法比較表
 
-GAcompare.png
-可以從收斂圖清楚看出，收斂在局部最佳解的方法有向左向右的ＨＣ、輪盤法的GA，其他方法均可以找到最佳解
-土耳曼的收斂速度從圖中看起來最快，但因為ＧＡ裡有染色體的關係，將染色體也考量進去找到最佳解的速度會慢於其他解。
+GAcompare.png 
+可以從收斂圖看出，距離大約從1300降低到600左右，離最佳解430還有蠻大的差值。
+從路徑圖可以看出，行走的路徑還是有很多的交疊線，路徑交疊也就代表著選擇了不好的路徑。
