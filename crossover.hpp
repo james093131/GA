@@ -72,8 +72,8 @@ void CX_crossover(i2d &arr,i2d temp){//隨機生成一個切割點，將兩個�
     int i=0;
     while(i<temp.size())
     {
-        i1d FIRST_check(arr[0].size());
-        i1d Second_check(arr[0].size());
+        i1d FIRST_check(arr[0].size()-1);
+        i1d Second_check(arr[0].size()-1);
         int index = Find_Value(temp[i][0],temp[i+1]);
         FIRST_check[0] = 1;
         Second_check[index] = 1;
@@ -81,12 +81,12 @@ void CX_crossover(i2d &arr,i2d temp){//隨機生成一個切割點，將兩個�
         while(true){
             if(chc == i)
             {
-            index = Find_Value(temp[i+1][index],temp[i]);
-            if(FIRST_check[index] == 1)
-                break;
-            else
-                FIRST_check[index] = 1;
-            chc =i+1;
+                index = Find_Value(temp[i+1][index],temp[i]);
+                if(FIRST_check[index] == 1)
+                    break;
+                else
+                    FIRST_check[index] = 1;
+                chc =i+1;
             }
             else{
                 index = Find_Value(temp[i][index],temp[i+1]);
